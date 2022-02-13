@@ -1,0 +1,15 @@
+ <div class="calendar">
+    {{ currentDate }}
+
+    <div class="calendar-grid" [ngSwitch]="viewMode">
+        <div class="calendar-month" *ngSwitchCase="CalendarViewMode.MONTH">
+            MONTH
+        </div>
+        <div class="calendar-week" *ngSwitchCase="CalendarViewMode.WEEK">
+            WEEK
+        </div>
+        <div class="calendar-day" *ngSwitchCase="CalendarViewMode.DAY">
+            DAY
+        </div>
+    </div>
+</div>
