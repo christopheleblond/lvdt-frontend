@@ -1,0 +1,16 @@
+{
+    "rooms": [
+        {
+            "id": "maisondusavoir",
+            "label": "La Maison du Savoir",
+            "address": "Avenue du Lauragais, 31320 Castanet Tolosan",
+            "tableCount": 22
+        },
+        {
+            "id": "lodalisque",
+            "label": "L'odalisque",
+            "address": "Route de Toulouse, 31320 Castanet Tolosan",
+            "tableCount": 12
+        }
+    ]
+}

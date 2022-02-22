@@ -1,0 +1,13 @@
+.calendar-grid {
+    .calendar-header-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .calendar-cells {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-gap: 10px;        
+    }
+}

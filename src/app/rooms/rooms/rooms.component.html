@@ -1,0 +1,10 @@
+<div class="rooms">
+    <button mat-raised-button color="primary" (click)="openForm(null)">+</button>
+    <div class="room" *ngFor="let room of rooms$ |async">
+        <div class="room-name">{{ room |json }}</div>
+        <div class="room-actions">
+            <button mat-raised-button color="accent" (click)="openForm(room)">Modifier</button>
+            <button mat-raised-button color="accent" (click)="openConfirmDialog('deleteBox', room)">Supprimer</button>
+        </div>
+    </div>
+</div>

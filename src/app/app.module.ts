@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from './calendar/calendar.module';
+import { SharedModule } from './shared/shared.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +14,9 @@ import { CalendarModule } from './calendar/calendar.module';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    CalendarModule
+    CalendarModule,
+    RoomsModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

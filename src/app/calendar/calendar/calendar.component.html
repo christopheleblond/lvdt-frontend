@@ -1,9 +1,22 @@
  <div class="calendar">
     {{ currentDate }}
 
+    <mat-button-toggle-group [(ngModel)]="viewMode" aria-label="View Mode">        
+        <mat-button-toggle [value]="CalendarViewMode.MONTH">MONTH</mat-button-toggle>
+        <mat-button-toggle [value]="CalendarViewMode.WEEK">WEEK</mat-button-toggle>
+        <mat-button-toggle [value]="CalendarViewMode.DAY">DAY</mat-button-toggle>
+    </mat-button-toggle-group>
+      
     <div class="calendar-grid" [ngSwitch]="viewMode">
         <div class="calendar-month" *ngSwitchCase="CalendarViewMode.MONTH">
-            MONTH
+            <div class="calendar-grid">
+                <div class="calendar-header-row">
+                    <div class="calendar-header-cell" *ngFor="let header of gridModel?.headers">{{ header }}</div>
+                </div>
+                <div class="calendar-cells">
+                    <div class="calendar-cell" *ngFor="let cell of gridModel?.cells"> {{ cell  }} </div>
+                </div>
+            </div>
         </div>
         <div class="calendar-week" *ngSwitchCase="CalendarViewMode.WEEK">
             WEEK
