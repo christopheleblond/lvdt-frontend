@@ -1,0 +1,10 @@
+{
+    "/service": {
+        "target": "http://localhost:9200",
+        "secure": false,
+        "pathRewrite": {
+            "^/service": ""
+          },
+          "logLevel": "debug"
+    }
+}

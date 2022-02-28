@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Room } from '../model/rooms';
+import { RoomsService } from '../rooms.service';
 
 @Component({
   selector: 'app-room-form',
@@ -10,30 +12,37 @@ import { Room } from '../model/rooms';
 export class RoomFormComponent implements OnInit, AfterViewInit {
 
   roomForm = new FormGroup({
-    roomName: new FormControl('', Validators.required),
-    roomAddress: new FormControl('', Validators.required),
-    roomTableCount: new FormControl('', Validators.min(1))
+    name: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
+    tableCount: new FormControl('', Validators.min(1))
   });
-
-  @ViewChild('roomNameElement') roomNameElement?: ElementRef;
 
   @Output()
   submit = new EventEmitter();
 
-  constructor() { }
+  room: Room;
+
+  constructor(private dialogRef: MatDialogRef<RoomFormComponent>, @Inject(MAT_DIALOG_DATA) data: { room: Room }, private roomService: RoomsService) { 
+      this.room = data.room;
+      this.roomForm.patchValue(this.room);
+  }
 
   ngAfterViewInit(): void {
-    this.roomNameElement?.nativeElement.focus();
+    
   }
 
   ngOnInit(): void {    
   }
 
   onSubmit(): void {    
-    const room = Object.assign({}, this.roomForm.value);
+    const room = {
+      id: this.room?.id,
+      ...this.roomForm.value
+    }
 
-    console.log('Add room', room);
-
-    this.submit.emit(room);
+    this.roomService.saveRoom(room).subscribe(resp => {
+      this.submit.emit(room);
+      console.log('Room added', room);
+    });    
   }
 }

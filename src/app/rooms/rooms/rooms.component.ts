@@ -1,9 +1,15 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
+import { delay, merge, mergeMap, Observable, of, Subject, timeout } from 'rxjs';
 import { Room } from '../model/rooms';
 import { RoomsService } from '../rooms.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
+
+export interface RoomServiceError {
+  message?: string;
+  cause?: Error;
+}
+
 
 @Component({
   selector: 'app-rooms',
@@ -12,22 +18,50 @@ import { RoomFormComponent } from '../room-form/room-form.component';
 })
 export class RoomsComponent implements OnInit {
 
-  rooms$: Observable<Room[]> = of([]);
+  rooms: Room[] = [];
+
+  refreshRoomList$ = new Subject();
+
+  // Main errors
+  failToSearchRoomsError: any;
 
   constructor(private roomService: RoomsService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.rooms$ = this.roomService.findAllRooms();
+
+    this.refreshRoomList$.pipe(mergeMap(e => this.roomService.findAllRooms())).subscribe(rooms => {
+      this.rooms = rooms;
+      this.failToSearchRoomsError = null;
+
+      console.log('refresh');
+
+    }, error => this.failToSearchRoomsError = { message: `Fail to find rooms: ${error.message}`, cause: error } as RoomServiceError);
+
+    this.refreshRoomList$.next(true);
   }
 
   openForm(room: Room | null): void {
-    this.dialog.open(RoomFormComponent, { data: { room }});
+    const dialogRef = this.dialog.open(RoomFormComponent, { data: { room }});
+
+    dialogRef.componentInstance.submit.subscribe(e => this.refreshRoomList$.next(true));
   }
 
   openConfirmDialog(dialogId: string, room: Room): void {
-    this.dialog.open(ConfirmRoomDeletionDialog, { data: { room }});
+    const dialogRef = this.dialog.open(ConfirmRoomDeletionDialog, { data: { room }});
+
+    dialogRef.afterClosed().subscribe(deletionAccepted => {
+      if(deletionAccepted) {
+        this.roomService.removeRoom(room)
+        .subscribe(del => {
+          this.refreshRoomList$.next(true);
+        });
+      }
+    });
   }
 
+  refresh(): void {
+    this.refreshRoomList$.next(true);
+  }
 }
 
 @Component({

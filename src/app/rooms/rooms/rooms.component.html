@@ -1,10 +1,12 @@
 <div class="rooms">
     <button mat-raised-button color="primary" (click)="openForm(null)">+</button>
-    <div class="room" *ngFor="let room of rooms$ |async">
+    <button mat-raised-button color="default" (click)="refresh()">Refresh list</button>
+    <div class="room" *ngFor="let room of rooms">
         <div class="room-name">{{ room |json }}</div>
         <div class="room-actions">
             <button mat-raised-button color="accent" (click)="openForm(room)">Modifier</button>
             <button mat-raised-button color="accent" (click)="openConfirmDialog('deleteBox', room)">Supprimer</button>
         </div>
     </div>
+    <div class="error" *ngIf="failToSearchRoomsError">{{ failToSearchRoomsError.message }}</div>
 </div>

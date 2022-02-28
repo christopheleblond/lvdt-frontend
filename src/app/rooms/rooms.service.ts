@@ -1,23 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { _MAT_HINT } from '@angular/material/form-field';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ElasticsearchService, ESHit } from '../shared/elasticsearch.service';
 import { Room } from './model/rooms';
 
 
-export const MOCKED_DATA = {
-  rooms: [
-    { 
-      id: 'odalisque',
-      name: 'L\'odalisque',
-      tableCount: 15
-    } as Room,
-    {
-      id: 'maison-du-savoir',
-      name: 'La maison du savoir',
-      tableCount: 22
-    } as Room
-  ]
+export const FIND_ALL_ROOMS_QUERY = {
+  query: {
+    match_all: {}
+  }
 }
 
 @Injectable({
@@ -25,13 +17,40 @@ export const MOCKED_DATA = {
 })
 export class RoomsService {
 
-  constructor(private readonly http: HttpClient) { }
+  roomIndex = environment.ROOM_INDEX;
 
-  findAllRooms(): Observable<Room[]> {
-    return this.http.get<Room[]>(`${environment.BACKEND_API_BASE_URL}/rooms`);
+  constructor(private readonly es: ElasticsearchService) { }
+
+  private roomMapper: (hit: ESHit<Room>) => Room = hit =>{
+    return {
+      id: hit._id,
+      ...hit._source
+    }
   }
 
-  saveRoom(room: Room) {
-    this.http.post(`${environment.BACKEND_API_BASE_URL}/rooms/${room.id}`, room);
+  findAllRooms(): Observable<Room[]> {
+    return this.es.search<Room>(this.roomIndex, FIND_ALL_ROOMS_QUERY)
+    .pipe(map(resp => resp.hits.hits.map(this.roomMapper)));
+  }
+
+  findRoomById(roomId: string): Observable<Room> {
+    return of({});
+  }
+
+  saveRoom(room: Room): Observable<Room> {
+    return this.es.update(this.roomIndex, room.id, room).pipe(
+      map(res => ({
+        id: res._id,
+        ...room
+      }))
+    );
+  }
+
+  removeRoom(room: Room): Observable<boolean> {
+    if(room.id) {
+      return this.es.delete(this.roomIndex, room.id);
+    }else{
+      return of(false);
+    }
   }
 }
