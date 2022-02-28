@@ -1,0 +1,11 @@
+<div class="plays">
+    <button mat-raised-button color="primary" (click)="openForm(null)">+</button>
+    <div class="play" *ngFor="let play of plays">
+        <div class="play-game-name">{{ play |json}}</div>
+        <div class="play-actions">
+            <button mat-raised-button color="basic" (click)="openForm(play)">Modifier</button>
+            <button mat-raised-button color="warn" (click)="openConfirmDeletionDialog(play)">Supprimer</button>
+            <button mat-raised-button color="accent" (click)="registerNewPlayer(play)">Inscrire</button>
+        </div>
+    </div>
+</div>

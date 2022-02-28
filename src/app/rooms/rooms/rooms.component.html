@@ -5,7 +5,7 @@
         <div class="room-name">{{ room |json }}</div>
         <div class="room-actions">
             <button mat-raised-button color="accent" (click)="openForm(room)">Modifier</button>
-            <button mat-raised-button color="accent" (click)="openConfirmDialog('deleteBox', room)">Supprimer</button>
+            <button mat-raised-button color="accent" (click)="openConfirmDeletionDialog(room)">Supprimer</button>
         </div>
     </div>
     <div class="error" *ngIf="failToSearchRoomsError">{{ failToSearchRoomsError.message }}</div>

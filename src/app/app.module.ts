@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from './calendar/calendar.module';
 import { SharedModule } from './shared/shared.module';
 import { RoomsModule } from './rooms/rooms.module';
+import { PlaysModule } from './plays/plays.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { RoomsModule } from './rooms/rooms.module';
     BrowserAnimationsModule,
     CalendarModule,
     RoomsModule,
+    PlaysModule,
     SharedModule
   ],
   providers: [],

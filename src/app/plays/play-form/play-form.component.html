@@ -1,0 +1,60 @@
+<form (ngSubmit)="submit()" [formGroup]="frmPlay">
+    <h1>Play</h1>
+    <mat-dialog-content class="mat-typography">
+      
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Date</mat-label>
+                <input type="date" matInput formControlName="date">
+            </mat-form-field>
+        </div>
+
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Game</mat-label>
+                <input type="text" matInput formControlName="gameId" [matAutocomplete]="gameAutocompletion" />
+                <mat-autocomplete autoActiveFirstOption #gameAutocompletion="matAutocomplete">
+                    <mat-option *ngFor="let option of ['Game A', 'Game B', 'Game C']" [value]="option">
+                      {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Room</mat-label>                
+                <mat-select formControlName="roomId" >
+                    <mat-option *ngFor="let room of rooms" [value]="room.id">{{ room.name }}</mat-option>                    
+                  </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Type</mat-label>
+                <input type="text" matInput formControlName="playType" />
+            </mat-form-field>
+        </div>
+
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <input type="text" matInput formControlName="description" />
+            </mat-form-field>
+        </div>
+
+        <div class="form-field">
+            <mat-form-field>
+                <mat-label>Players</mat-label>
+                <input type="number" matInput formControlName="playerCount" />
+            </mat-form-field>
+        </div>
+
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Annuler</button>
+      <button mat-button [mat-dialog-close]="true" type="submit" cdkFocusInitial [disabled]="!frmPlay.valid">Enregistrer</button>
+    </mat-dialog-actions>
+</form>

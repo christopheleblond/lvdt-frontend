@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   ELASTICSEARCH_HOST: '/service',
-  ROOM_INDEX: 'lvdt-rooms'
+  ROOM_INDEX: 'lvdt-rooms',
+  PLAY_INDEX: 'lvdt-plays'
 };
 
 /*

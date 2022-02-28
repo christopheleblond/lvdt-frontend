@@ -7,6 +7,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
+
 @NgModule({
   declarations: [],
   imports: [
@@ -17,7 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonToggleModule,
     MatDialogModule,
     MatInputModule,
-    HttpClientModule
+    MatSelectModule,
+    HttpClientModule,
+    MatAutocompleteModule
   ],
   exports: [
     FormsModule,
@@ -26,7 +32,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonToggleModule,
     MatDialogModule,
     MatInputModule,
-    HttpClientModule
+    MatSelectModule,
+    HttpClientModule,
+    MatAutocompleteModule
   ]
 })
 export class SharedModule { }

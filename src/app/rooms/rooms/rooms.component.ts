@@ -1,6 +1,6 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { delay, merge, mergeMap, Observable, of, Subject, timeout } from 'rxjs';
+import { delay, merge, mergeMap, Observable, of, Subject, Subscription, timeout } from 'rxjs';
 import { Room } from '../model/rooms';
 import { RoomsService } from '../rooms.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
@@ -16,11 +16,12 @@ export interface RoomServiceError {
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.css']
 })
-export class RoomsComponent implements OnInit {
+export class RoomsComponent implements OnInit, OnDestroy {
 
   rooms: Room[] = [];
 
   refreshRoomList$ = new Subject();
+  refreshRoomListSub: Subscription | null = null;
 
   // Main errors
   failToSearchRoomsError: any;
@@ -29,15 +30,18 @@ export class RoomsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.refreshRoomList$.pipe(mergeMap(e => this.roomService.findAllRooms())).subscribe(rooms => {
+    this.refreshRoomListSub = this.refreshRoomList$.pipe(mergeMap(e => this.roomService.findAllRooms())).subscribe(rooms => {
       this.rooms = rooms;
       this.failToSearchRoomsError = null;
-
-      console.log('refresh');
-
     }, error => this.failToSearchRoomsError = { message: `Fail to find rooms: ${error.message}`, cause: error } as RoomServiceError);
 
     this.refreshRoomList$.next(true);
+  }
+
+  ngOnDestroy(): void {
+      if(this.refreshRoomListSub) {
+        this.refreshRoomListSub.unsubscribe();
+      }
   }
 
   openForm(room: Room | null): void {
@@ -46,7 +50,7 @@ export class RoomsComponent implements OnInit {
     dialogRef.componentInstance.submit.subscribe(e => this.refreshRoomList$.next(true));
   }
 
-  openConfirmDialog(dialogId: string, room: Room): void {
+  openConfirmDeletionDialog(room: Room): void {
     const dialogRef = this.dialog.open(ConfirmRoomDeletionDialog, { data: { room }});
 
     dialogRef.afterClosed().subscribe(deletionAccepted => {
